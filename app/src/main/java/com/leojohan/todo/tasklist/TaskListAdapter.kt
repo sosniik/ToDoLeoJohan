@@ -27,16 +27,15 @@ class TaskListAdapter(private val taskList: List<Task>) : RecyclerView.Adapter<T
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textView = itemView.findViewById<TextView>(R.id.task_title)
-        //private val addButton = itemView.findViewById<ImageButton>(R.id.DeleteButton)
         private val deleteButton = itemView.findViewById<ImageButton>(R.id.DeleteButton)
         fun bind(taskTitle: Task) {
             textView.text = taskTitle.toString()
+
             deleteButton.setOnClickListener{
                 onDeleteTask?.invoke(taskTitle)
             }
         }
     }
-
     var onDeleteTask: ((Task) -> Unit)? = null
 
 
