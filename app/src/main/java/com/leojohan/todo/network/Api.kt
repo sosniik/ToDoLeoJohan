@@ -12,6 +12,9 @@ object Api {
     val userService: UserService by lazy {
         retrofit.create(UserService::class.java)
     }
+    val tasksWebService: TaskWebService by lazy {
+        retrofit.create(TaskWebService::class.java)
+    }
 
     // constantes qui serviront à faire les requêtes
     private const val BASE_URL = "https://android-tasks-api.herokuapp.com/api/"

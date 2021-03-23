@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.leojohan.todo.R
 
-class TaskListAdapter(private val taskList: List<Task>) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
+class TaskListAdapter(val taskList: MutableList<Task> = mutableListOf()) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskListAdapter.TaskViewHolder{
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_task,parent,false)
@@ -28,15 +28,18 @@ class TaskListAdapter(private val taskList: List<Task>) : RecyclerView.Adapter<T
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textView = itemView.findViewById<TextView>(R.id.task_title)
         private val deleteButton = itemView.findViewById<ImageButton>(R.id.DeleteButton)
+        private val editButton = itemView.findViewById<ImageButton>(R.id.EditButton)
         fun bind(taskTitle: Task) {
             textView.text = taskTitle.toString()
-
             deleteButton.setOnClickListener{
                 onDeleteTask?.invoke(taskTitle)
+            }
+            editButton.setOnClickListener {
+                onEditTask?.invoke(taskTitle)
             }
         }
     }
     var onDeleteTask: ((Task) -> Unit)? = null
-
+    var onEditTask: ((Task) -> Unit)? = null
 
 }
