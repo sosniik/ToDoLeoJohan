@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,12 +19,13 @@ import com.leojohan.todo.R
 import com.leojohan.todo.network.Api
 import com.leojohan.todo.task.TaskActivity
 import kotlinx.coroutines.launch
+import java.nio.file.Files.delete
 import java.util.*
 
 class TaskListFragment : Fragment() {
     lateinit var textView : TextView
     private val tasksRepository = TasksRepository()
-
+    val viewModel: TaskListViewModel by viewModels()
 
     private val adapter: TaskListAdapter = TaskListAdapter()
     companion object {
@@ -79,9 +81,7 @@ class TaskListFragment : Fragment() {
         }
 
         adapter.onDeleteTask = { task ->
-            lifecycleScope.launch{
-                tasksRepository.delete(task)
-            }
+           viewModel.deleteTask(task)
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -90,14 +90,10 @@ class TaskListFragment : Fragment() {
             val task = data?.getSerializableExtra(TaskActivity.TASK_KEY) as? Task ?: return
             val indexTask = adapter.taskList.indexOfFirst{it.id == task.id}
             if (indexTask < 0) {
-                lifecycleScope.launch{
-                    tasksRepository.create(task)
-                }
+               viewModel.addTask(task)
             }
             else {
-                lifecycleScope.launch{
-                    tasksRepository.update(task)
-                }
+                viewModel.editTask(task)
             }
         }
     }

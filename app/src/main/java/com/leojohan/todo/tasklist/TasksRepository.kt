@@ -7,8 +7,6 @@ import com.leojohan.todo.network.Api
 class TasksRepository {
     private val tasksWebService = Api.tasksWebService
 
-
-
     // Ces deux variables encapsulent la même donnée:
     // [_taskList] est modifiable mais privée donc inaccessible à l'extérieur de cette classe
     private val _taskList = MutableLiveData<List<Task>>()
