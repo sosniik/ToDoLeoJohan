@@ -24,10 +24,10 @@ import java.util.*
 
 class TaskListFragment : Fragment() {
     lateinit var textView : TextView
-    private val tasksRepository = TasksRepository()
     val viewModel: TaskListViewModel by viewModels()
 
     private val adapter: TaskListAdapter = TaskListAdapter()
+
     companion object {
         const val ADD_TASK_REQUEST_CODE = 666
     }
@@ -44,11 +44,12 @@ class TaskListFragment : Fragment() {
 
     override fun onResume(){
         super.onResume()
+        viewModel.loadTasks()
         lifecycleScope.launch {
             val userInfo = Api.userService.getInfo().body()!!
             val text = "${userInfo.firstName} ${userInfo.lastName}"
             textView.text = text
-            tasksRepository.refresh()
+            viewModel.loadTasks()
         }
 
     }
@@ -65,7 +66,7 @@ class TaskListFragment : Fragment() {
             val intent = Intent(activity, TaskActivity::class.java)
             startActivityForResult(intent, ADD_TASK_REQUEST_CODE)
         }
-        tasksRepository.taskList.observe(viewLifecycleOwner) { list ->
+        viewModel.taskList.observe(viewLifecycleOwner) { list ->
             adapter.taskList.clear()
             adapter.taskList.addAll(list)//modifier la liste et charger les nouvelles valeurs
             adapter.notifyDataSetChanged()

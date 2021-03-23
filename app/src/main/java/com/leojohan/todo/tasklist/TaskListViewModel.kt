@@ -21,6 +21,7 @@ class TaskListViewModel : ViewModel() {
     }
     fun deleteTask(task: Task) {
         viewModelScope.launch{
+            val deleteTask = repository.delete(task)
             val editableList = _taskList.value.orEmpty().toMutableList()
             editableList.remove(task)
             _taskList.value = editableList
@@ -30,7 +31,7 @@ class TaskListViewModel : ViewModel() {
         viewModelScope.launch{
             val createdTask = repository.create(task)
             val editableList = _taskList.value.orEmpty().toMutableList()
-            editableList.add(editableList.size,task)
+            editableList.add(createdTask!!)
             _taskList.value = editableList
         }
     }
@@ -40,7 +41,7 @@ class TaskListViewModel : ViewModel() {
             val updatedTask = editedTask!!
             val editableTask = _taskList.value.orEmpty().toMutableList()
             val position = editableTask.indexOfFirst { task.id == it.id}
-            editableTask[position] = task
+            editableTask[position] = updatedTask
             _taskList.value = editableTask
         }
     }
